@@ -1,5 +1,6 @@
 import cloudinary
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
+from pydantic import Extra
 
 
 def init_cloudinary():
@@ -11,7 +12,7 @@ def init_cloudinary():
     )
 
 
-class Settings(BaseSettings):
+class Settings(BaseSettings, extra=Extra.allow):
     sqlalchemy_database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
     secret_key: str = "secretkey"
     algorithm: str = "HS256"

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.database.db import get_db
 from src.schemas.photos import TagBase, TagResponse
 from src.repository import tags as repository_tags
-from src.database.models import User, UserRoleEnum
+from src.database.models import User
 from src.services.auth import auth_service
 
 

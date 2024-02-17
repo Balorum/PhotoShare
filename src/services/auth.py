@@ -43,3 +43,5 @@ class Auth:
 
     async def decode_refresh_token() -> str:
         pass
+
+auth_service = Auth()
