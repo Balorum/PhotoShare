@@ -1,30 +1,31 @@
 [tool.poetry]
-name = "final-web-env"
+name = "ps-env"
 version = "0.1.0"
 description = ""
 authors = ["Balorum <Remeshevskyi.Nikita03@gmail.com>"]
 readme = "README.md"
-packages = [{include = "final_web_env"}]
+packages = [{include = "ps_env"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.109.2"
+libgravatar = "^1.0.4"
 uvicorn = {extras = ["standard"], version = "^0.27.1"}
-sqlalchemy = "^2.0.27"
+redis = "^5.0.1"
+jinja2 = "^3.1.3"
+fastapi-limiter = "^0.1.6"
+pydantic = {extras = ["email"], version = "^2.6.1"}
+alembic = "^1.13.1"
+python-dotenv = "^1.0.1"
 psycopg2 = "^2.9.9"
+sqlalchemy = "^2.0.27"
+fastapi-mail = "^1.4.1"
+pytest = "^8.0.0"
 python-multipart = "^0.0.9"
 cloudinary = "^1.38.0"
 python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
-fastapi-mail = "^1.4.1"
-alembic = "^1.13.1"
-pytest = "^8.0.0"
-pydantic = {extras = ["email"], version = "^2.6.1"}
-python-dotenv = "^1.0.1"
-redis = "^5.0.1"
-jinja2 = "^3.1.3"
-fastapi-limiter = "^0.1.6"
-libgravatar = "^1.0.4"
+fastapi-jwt-auth = "^0.5.0"
 
 
 [build-system]
