@@ -3,12 +3,12 @@ from typing import List
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
-from src.database.db import get_db
-from src.repository import users as repository_users
-from src.database.models import User
-from src.schemas.photos import PhotoResponse, RequestRole
+# from src.database.db import get_db
+# from src.repository import users as repository_users
+# from src.database.models import User
+# from src.schemas.photos import PhotoResponse, RequestRole
 from src.schemas.users import UserModel, UserResponse
-from src.services.auth import auth_service 
+# from src.services.auth import auth_service
 
 router = APIRouter(prefix='/users', tags=["users"])
 

@@ -1,16 +1,16 @@
 from typing import List
 
 from fastapi import APIRouter, HTTPException, Depends, status
-from sqlalchemy.orm import Session
-
-from src.database.db import get_db
-from src.schemas.photos import TagBase, TagResponse
-from src.repository import tags as repository_tags
-from src.database.models import User, UserRoleEnum
-from src.services.auth import auth_service
-
+# from sqlalchemy.orm import Session
+#
+# from src.database.db import get_db
+from src.schemas.photos import TagResponse
+# from src.repository import tags as repository_tags
+# from src.database.models import User, UserRoleEnum
+# from src.services.auth import auth_service
 
 router = APIRouter(prefix='/tags', tags=["tags"])
+
 
 @router.post("/create/", response_model=TagResponse)
 async def create_tag():
@@ -35,7 +35,3 @@ async def update_tag():
 @router.delete("/del/{tag_id}", response_model=TagResponse)
 async def remove_tag():
     pass
-
-
-
-

@@ -1,18 +1,34 @@
 from datetime import datetime
-from typing import List, Optional
+
+from fastapi import UploadFile, File, Form
 from pydantic import BaseModel, Field
+from typing import List
 
 
-class TagBase(BaseModel):
-    pass
+class TagModel(BaseModel):
+    name: str = Field(max_length=20)
 
 
-class TagModel(TagBase):
-    pass
+class TagResponse(TagModel):
+    id: int
+
+    class Config:
+        orm_mode = True
 
 
-class TagResponse(TagBase):
-    pass
+class PhotoBase(BaseModel):
+    title: str = Field(max_length=50)
+    description: str = Field(max_length=150)
+    tags: List[str]
+
+
+class PhotoResponse(PhotoBase):
+    id: int
+    created_at: datetime
+    tags: List[TagResponse] | None
+
+    class Config:
+        orm_mode = True
 
 
 class CommentBase(BaseModel):
@@ -24,24 +40,6 @@ class CommentModel(CommentBase):
 
 
 class CommentUpdate(CommentModel):
-    pass
-
-
-class PhotoBase(BaseModel):
-    pass
-
-
-class PhotoModel(PhotoBase):
-    pass
-
-
-class PhotoUpdate(BaseModel):
-    pass
-
-class PhotoStatusUpdate(BaseModel):
-    pass
-
-class PhotoResponse(PhotoBase):
     pass
 
 
