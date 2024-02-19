@@ -4,15 +4,23 @@ from pydantic import BaseModel, Field
 
 
 class TagBase(BaseModel):
-    pass
+    title: str = Field(max_length=50)
 
 
 class TagModel(TagBase):
     pass
 
+    class Config:
+            orm_mode = True
+
 
 class TagResponse(TagBase):
-    pass
+    id: int
+    user_id: int
+    created_at: datetime
+
+    class Config:
+        orm_mode = True
 
 
 class CommentBase(BaseModel):
