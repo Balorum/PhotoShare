@@ -5,6 +5,7 @@ redis
 jinja2
 fastapi-limiter
 pydantic[email]
+pydantic~=2.5.3
 alembic
 python-dotenv
 psycopg2

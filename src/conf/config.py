@@ -1,18 +1,22 @@
 import cloudinary
-from pydantic import BaseSettings
+
+# from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 def init_cloudinary():
     cloudinary.config(
-        cloud_name = settings.cloudinary_name,
-        api_key = settings.cloudinary_api_key,
-        api_secret = settings.cloudinary_api_secret,
-        secure = True
+        cloud_name=settings.cloudinary_name,
+        api_key=settings.cloudinary_api_key,
+        api_secret=settings.cloudinary_api_secret,
+        secure=True,
     )
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    sqlalchemy_database_url: str = (
+        "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    )
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"
@@ -27,9 +31,9 @@ class Settings(BaseSettings):
     cloudinary_api_key: str = "1234567890"
     cloudinary_api_secret: str = "secret"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    # class Config:
+    #    env_file = ".env"
+    #    env_file_encoding = "utf-8"
 
 
 settings = Settings()
