@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException, Depends, status, Security, BackgroundTasks, Request
 from fastapi.security import OAuth2PasswordRequestForm, HTTPAuthorizationCredentials, HTTPBearer
-# from sqlalchemy.orm import Session
-#
-# from src.database.models import User
+from sqlalchemy.orm import Session
+
+from src.database.models import User
 from src.database.db import get_db
 
 from src.schemas.users import UserModel, UserResponse, TokenSchema, RequestEmail
