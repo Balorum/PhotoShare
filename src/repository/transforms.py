@@ -1,5 +1,6 @@
 import cloudinary
 import cloudinary.uploader
+from src.conf.config import cloud_init
 from src.schemas.transform import TransformModel
 from sqlalchemy.orm import Session
 from src.repository.photos import get_photo
@@ -9,12 +10,7 @@ from src.conf.config import settings
 async def get_transform_url(photo_id: int, transforms: TransformModel, db: Session):
     photo = await get_photo(photo_id, db)
     if photo:
-        cloudinary.config(
-            cloud_name=settings.CLD_NAME,
-            api_key=settings.CLD_API_KEY,
-            api_secret=settings.CLD_API_SECRET,
-            secure=True,
-        )
+        cloud_init()
         param_dict = dict()
         for i in transforms:
             if i[1]:
