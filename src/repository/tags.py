@@ -25,11 +25,13 @@ async def get_my_tags(tag_id: int, user: str, db: Session) -> List[Tag]:
     return db.query(Tag).filter(and_(Tag.id == tag_id, Tag.user_id == 1)).first()
 
 async def create_tag(body: TagModel, user: str, db: Session) -> Tag:
-    user = await create_user(db)
-    tag = db.query(Tag).filter(Tag.title == body.title).first()
+    #user = await create_user(db)
+    val_title = body.title
+    val_title = val_title.lower()
+    tag = db.query(Tag).filter(Tag.title == val_title.lower()).first()
     if tag == None:
         tag = Tag(
-            title=body.title,
+            title=val_title,
             user_id = 1,
         )
         db.add(tag)

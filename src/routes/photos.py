@@ -3,7 +3,8 @@ from fastapi import APIRouter, HTTPException, Depends, status, File, Form, Uploa
 from sqlalchemy.orm import Session
 
 from src.database.db import get_db
-# from src.database.models import User
+from src.database.models import User
+from src.database.models import Tag
 from src.schemas.photos import PhotoResponse, CommentModel
 from src.repository import photos as repository_photos
 
@@ -18,6 +19,8 @@ async def create_photo(file: UploadFile = File(...),
                        description: str = Form(None),
                        tags: List[str] = Form(None),
                        db: Session = Depends(get_db)):
+    if len(tags[0].split(",")) >= 5:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='There cannot be more than five tags')
     new_photo = await repository_photos.create_photo(title, description, tags, file, db)
     if new_photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not found')
@@ -55,6 +58,8 @@ async def update_photo(photo_id: int = Path(description="The ID of the photo to 
                        description: str = Form(None),
                        tags: List[str] = Form(None),
                        db: Session = Depends(get_db)):
+    if len(tags[0].split(",")) >= 5:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='There cannot be more than five tags')
     new_photo = await repository_photos.update_photo(photo_id, title, description, tags, file, db)
     if new_photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not found')
