@@ -1,11 +1,7 @@
-import redis.asyncio as redis
+# main.py
 import uvicorn
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI
 from fastapi_limiter import FastAPILimiter
-from sqlalchemy.orm import Session
-
-# from src.database.db import get_db
-from src.routes import photos, auth, users, comments, transforms
 from src.conf.config import settings
 from src.repository.users import create_users
 from src.database.db import get_db
@@ -36,10 +32,8 @@ app.include_router(auth.router, prefix="/api")
 app.include_router(users.router, prefix="/api")
 app.include_router(photos.router, prefix="/api")
 app.include_router(transforms.router, prefix="/api")
-# app.include_router(tags.router, prefix="/api")
 app.include_router(comments.router, prefix="/api")
 
-
 if __name__ == "__main__":
-   
+
     uvicorn.run(app="main:app", host="localhost", port=8000)

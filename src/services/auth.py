@@ -1,15 +1,12 @@
+# services/auth.py
 from typing import Optional
-
-import redis
-from jose import JWTError, jwt
 from fastapi import HTTPException, status, Depends
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
+from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-
-from src.database.db import get_db
-from src.repository import users as repository_users
+from jose import JWTError, jwt
 from src.conf.config import settings
 
 
@@ -153,7 +150,6 @@ class Auth:
         )
 
         try:
-            # Decode JWT
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
             if payload["scope"] == "access_token":
                 email = payload["sub"]

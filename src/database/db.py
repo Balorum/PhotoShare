@@ -1,26 +1,25 @@
-from sqlalchemy import create_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
-import sys
-import os
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-parent_dir = os.path.abspath(os.path.join(current_dir, ".."))
-sys.path.append(parent_dir)
-# sys.path.append("..")
-
-# from src.conf.config import settings
-from conf.config import settings
+from src.conf.config import settings
 
 SQLALCHEMY_DATABASE_URL = settings.sqlalchemy_database_url
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+print("*"*120)
+print(SQLALCHEMY_DATABASE_URL)
+print("*"*120)
 
+async_engine = create_async_engine(SQLALCHEMY_DATABASE_URL)
 
-# Dependency
-def get_db():
-    db = SessionLocal()
+async_session = sessionmaker(
+    async_engine, expire_on_commit=False, class_=AsyncSession
+)
+
+async def get_async_db():
+    async_db = async_session()
     try:
-        yield db
+        yield async_db
     finally:
-        db.close()
+        await async_db.close()
+
+
+get_db = get_async_db
