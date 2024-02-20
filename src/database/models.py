@@ -91,3 +91,4 @@ class Comment(Base):
 
     user = relationship("User", backref="comments")
     post = relationship("Photo", backref="comments")
+
