@@ -1,13 +1,38 @@
-from pydantic import ConfigDict
+import cloudinary
 from pydantic_settings import BaseSettings
+from pydantic import Extra
+
+
+def init_cloudinary():
+    cloudinary.config(
+        cloud_name = settings.cloudinary_name,
+        api_key = settings.cloudinary_api_key,
+        api_secret = settings.cloudinary_api_secret,
+        secure = True
+    )
 
 
 class Settings(BaseSettings):
-    SQLALCHEMY_DATABASE_URL: str = "postgresql+asyncpg://postgres:111111@localhost:5432/abc"
-    CLD_NAME: str = 'photoshare'
-    CLD_API_KEY: str = '123123123'
-    CLD_API_SECRET: str = '222dcsds00'
-    model_config = ConfigDict(extra='ignore', env_file=".env.example", env_file_encoding="utf-8")  # noqa
+    sqlalchemy_database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    secret_key: str = "secretkey"
+    algorithm: str = "HS256"
+    mail_username: str = "example@meta.ua"
+    mail_password: str = "secretPassword"
+    mail_from: str = "example@meta.ua"
+    mail_port: int = 465
+    mail_server: str = "smtp.meta.ua"
+    redis_host: str = "localhost"
+    redis_port: int = 6379
+    redis_password: str = "secretPassword"
+    cloudinary_name: str = "name"
+    cloudinary_api_key: str = "1234567890"
+    cloudinary_api_secret: str = "secret"
+
+    class Config:
+        extra='ignore'
+        env_file = ".env"
+        env_file_encoding = "utf-8"
 
 
 settings = Settings()
+
