@@ -3,8 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from sqlalchemy.orm import Session
 
-# from src.database.db import get_db
-# from src.repository import users as repository_users
+from src.database.db import get_db
+from src.repository.users import create_users
+
 # from src.database.models import User
 # from src.schemas.photos import PhotoResponse, RequestRole
 from src.schemas.users import UserModel, UserResponse
@@ -22,3 +23,8 @@ async def read_my_profile():
 @router.put("/edit_prof/", response_model=UserResponse)
 async def edit_profile():
     pass
+
+
+@router.put("/add_user/", response_model=UserResponse)
+async def add_u():
+    await create_users(Depends(get_db))

@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 # from src.database.db import get_db
 from src.routes import photos, auth, users, comments, transforms
 from src.conf.config import settings
+from src.repository.users import create_users
+from src.database.db import get_db
 
 app = FastAPI()
 
@@ -39,4 +41,5 @@ app.include_router(comments.router, prefix="/api")
 
 
 if __name__ == "__main__":
+   
     uvicorn.run(app="main:app", host="localhost", port=8000)

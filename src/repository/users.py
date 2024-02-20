@@ -13,6 +13,21 @@ from src.database.models import User, Role, Comment, Photo
 from src.schemas.users import UserModel
 
 
+async def create_users(db: Session):
+    user = User(
+        username="username",
+        email="email",
+        password="password",
+        avatar="avatar",
+        role="admin",
+        confirmed=True,
+    )
+    db.add(user)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
 async def get_user_by_email(email: str, db: Session) -> User:
     """
     The get_user_by_email function takes in an email and a database session,

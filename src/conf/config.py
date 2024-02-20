@@ -24,7 +24,7 @@ def cloud_init():
 
 class Settings(BaseSettings):
     sqlalchemy_database_url: str = (
-        "postgresql+psycopg2://user:password@localhost:5432/postgres"
+        "postgresql+psycopg2://andmyr:W596@localhost:5432/postgres"
     )
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
