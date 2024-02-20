@@ -7,8 +7,10 @@ fastapi-limiter
 pydantic[email]
 pydantic~=2.5.3
 alembic
+aioredis
 python-dotenv
 psycopg2
+asyncpg
 sqlalchemy
 fastapi-mail
 pytest
