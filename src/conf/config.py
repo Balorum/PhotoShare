@@ -13,6 +13,15 @@ def init_cloudinary():
     )
 
 
+def cloud_init():
+    cloudinary.config(
+        cloud_name=settings.cloudinary_name,
+        api_key=settings.cloudinary_api_key,
+        api_secret=settings.cloudinary_api_secret,
+        secure=True,
+    )
+
+
 class Settings(BaseSettings):
     sqlalchemy_database_url: str = (
         "postgresql+psycopg2://user:password@localhost:5432/postgres"
