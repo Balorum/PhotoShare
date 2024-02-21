@@ -134,9 +134,28 @@ class Auth:
                 detail="Could not validate credentials",
             )
 
-
-    async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    async def get_current_user(self, db: Session = Depends(get_db)):
         """
+        The get_current_user function is a dependency that will be used in the
+            protected endpoints. It returns the user with id=1 without checking tokens.
+        
+        :param self: Represent the instance of the class
+        :param db: Session: Get a database session
+        :return: A user object
+        """
+        user_id = 1
+        user = await repository_users.get_user_by_email('test_1@gmail.com', db)
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+        return user
+
+    """
+    async def get_current_user(self, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+        
         The get_current_user function is a dependency that will be used in the
             protected endpoints. It takes a token as an argument and returns the user
             associated with that token. If no user is found, it raises an exception.
@@ -145,7 +164,7 @@ class Auth:
         :param token: str: Pass the token from the request header to the function
         :param db: Session: Get a database session
         :return: A user object
-        """
+        
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Could not validate credentials",
@@ -168,7 +187,10 @@ class Auth:
         if user is None:
             raise credentials_exception
         return user
-    
+    """
+        
+
+
     def create_email_token(self, data: dict):
         """
         The create_email_token function takes a dictionary of data and returns a JWT token.

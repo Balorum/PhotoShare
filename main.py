@@ -1,6 +1,6 @@
 import redis.asyncio as redis
 import uvicorn
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi_limiter import FastAPILimiter
 from sqlalchemy.orm import Session
 
@@ -8,8 +8,19 @@ from src.database.db import get_db
 from src.routes import photos, tags, auth, users, comments, transforms
 from src.conf.config import settings
 
+from src.services.auth import Auth
+
 app = FastAPI()
-    
+
+####
+#auth_service = Auth()
+#
+## middleware для перевірки дозволів користувача
+#@app.middleware("http")
+#async def add_auth_service(request: Request, call_next):
+#    request.state.auth_service = auth_service
+#    response = await call_next(request)
+#    return response
 
 
 @app.on_event("startup")
@@ -40,4 +51,4 @@ app.include_router(comments.router, prefix='/api')
 
 
 if __name__ == '__main__':
-    uvicorn.run(app='main:app', host='localhost', port=8000)
+    uvicorn.run(app='main:app', host='localhost', port=8001)

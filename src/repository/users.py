@@ -1,6 +1,8 @@
 from libgravatar import Gravatar
 from datetime import datetime
 from typing import List
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.future import select
 
 import cloudinary
 import cloudinary.uploader
@@ -22,7 +24,17 @@ async def get_user_by_email(email: str, db: Session) -> User:
     :param db: Session: Pass the database session to the function
     :return: A user object
     """
-    return db.query(User).filter(User.email == email).first()
+    try:
+        print(":"*60)
+        result = await db.execute(select(User).filter(User.email == email))
+        print("*"*60)
+        row = await result.fetchone()
+        print("/"*60)
+        return row
+    except SQLAlchemyError as e:
+        print(f"An error occurred while querying the database: {e}")
+        return 1
+
 
 
 async def create_user(body: UserModel, db: Session) -> User:
