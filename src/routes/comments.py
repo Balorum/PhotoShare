@@ -39,7 +39,7 @@ async def edit_comment(
     comment_id: int,
     new_text: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(auth_service.get_current_user),
+    current_user: User = Depends(auth_service.get_current_user_s),
 ):
     comment = await repository_comments.get_comment(db, comment_id)
     if not comment:
@@ -61,7 +61,7 @@ async def edit_comment(
 async def delete_comment(
     comment_id: int,
     db: Session = Depends(get_db),
-    current_user: User = Depends(auth_service.get_current_user),
+    current_user: User = Depends(auth_service.get_current_user_s),
 ):
     if not auth_service.is_admin_or_moderator(current_user):
         raise HTTPException(

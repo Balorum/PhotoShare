@@ -31,8 +31,8 @@ async def edit_comment(db: Session, comment_id: int, new_text: str):
     comment = await get_comment(db, comment_id)
     if comment:
         comment.text = new_text
-        await db.commit()
-        await db.refresh(comment)
+        db.commit()
+        db.refresh(comment)
     return comment
 
 
@@ -40,5 +40,5 @@ async def delete_comment(db: Session, comment_id: int):
     comment = await get_comment(db, comment_id)
     if comment:
         db.delete(comment)
-        await db.commit()
+        db.commit()
     return comment
