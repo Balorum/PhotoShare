@@ -1,4 +1,5 @@
 from typing import List
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 from sqlalchemy import and_, func
@@ -11,9 +12,7 @@ async def create_comment(
     db: Session, comment_data: CommentModel, photo_id: int, user_id: int
 ):
     comment = Comment(
-        text=comment_data.get("text"),
-        created_at=comment_data.get("created_at"),
-        updated_at=comment_data.get("updated_at"),
+        text=comment_data.text,
         user_id=user_id,
         photo_id=photo_id,
     )
@@ -31,6 +30,8 @@ async def edit_comment(db: Session, comment_id: int, new_text: str):
     comment = await get_comment(db, comment_id)
     if comment:
         comment.text = new_text
+        comment.updated_at = datetime.now()
+        comment.update_status = True
         db.commit()
         db.refresh(comment)
     return comment

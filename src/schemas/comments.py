@@ -6,8 +6,10 @@ class CommentBase(BaseModel):
     text: str
 
 
-class CommentCreate(CommentBase):
+class CommentResponse(CommentBase):
+    id: int
     text: str
+    photo_id: int
 
 
 class CommentUpdate(BaseModel):
@@ -15,12 +17,7 @@ class CommentUpdate(BaseModel):
 
 
 class CommentModel(BaseModel):
-    id: int
     text: str
-    user_id: int
-    photo_id: int
-    created_at: datetime
-    updated_at: datetime
 
     class Config:
         orm_mode = True
