@@ -1,8 +1,8 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-from src.database.models import User, Hashtag
-from ..src.services.auth import auth_service
+from ../..src.database.models import User, Hashtag
+from ../../src.services.auth import auth_service
 
 
 def test_create_tag(client, token):
