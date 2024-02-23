@@ -25,7 +25,7 @@ async def create_comment(
     photo_id: int,
     comment: CommentModel,
     db: Session = Depends(get_db),
-    current_user: User = Depends(auth_service.get_current_user),
+    current_user: User = Depends(auth_service.get_current_user_s),
 ):
     """
     The create_comment function creates a new comment for the image with the given ID.
@@ -52,7 +52,7 @@ async def edit_comment(
     comment_id: int,
     new_text: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(auth_service.get_current_user),
+    current_user: User = Depends(auth_service.get_current_user_s),
 ):
     """
     The edit_comment function allows a user to edit their own comment.
@@ -113,3 +113,26 @@ async def delete_comment(
         )
     await repository_comments.delete_comment(db, comment_id)
     return comment
+
+
+@router.get("/get_comment_id/", response_model=CommentModel)
+async def get_comment_photo_user_id_route(
+    db: Session = Depends(get_db),
+    user_id: int = None,
+    photo_id: int = None,
+    current_user: User = Depends(auth_service.get_current_user_s)
+):
+    if not user_id:
+        user_id = current_user.id
+    if not photo_id:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="user_id cannot be empty")
+    return await repository_comments.get_comment_photo_user_id(db, photo_id, user_id)
+
+
+@router.get("/get_comment_photo_id/{photo_id}", response_model=CommentModel)
+async def get_comment_photo_id_route(
+    db: Session = Depends(get_db),
+    photo_id: int = None,
+):
+    return repository_comments.get_comment_photo_id(db, photo_id)
+    
