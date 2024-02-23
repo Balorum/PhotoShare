@@ -31,8 +31,8 @@ async def create_photo(file: UploadFile = File(...),
 
 @router.get("/get_by_user/{user_id}", response_model=List[PhotoResponse])
 async def show_all_user_photos(skip: int = 0, limit: int = 100,
-                                current_user: User = Depends(auth_service.get_current_user),
-                                db: Session = Depends(get_db)):
+                               current_user: User = Depends(auth_service.get_current_user),
+                               db: Session = Depends(get_db)):
     posts = await repository_photos.get_user_photos(skip, limit, current_user, db)
     if posts is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Posts not found")
@@ -41,16 +41,16 @@ async def show_all_user_photos(skip: int = 0, limit: int = 100,
 
 @router.get("/all", response_model=List[PhotoResponse])
 async def show_all_photos(skip: int = 0, limit: int = 100,
-                          current_user: User = Depends(auth_service.get_current_user), 
+                          current_user: User = Depends(auth_service.get_current_user),
                           db: Session = Depends(get_db)):
-    return await repository_photos.get_photos(skip, limit, current_user, db)
+    return await repository_photos.get_photos(skip, limit, db)
 
 
 @router.get("/by_id/{photo_id}", response_model=PhotoResponse)
 async def show_photo_by_id(photo_id: int = Path(description="The ID of the photo to get"),
                            current_user: User = Depends(auth_service.get_current_user),
                            db: Session = Depends(get_db)):
-    new_photo = await repository_photos.get_photo(photo_id, current_user, db)
+    new_photo = await repository_photos.get_photo(photo_id, db)
     if new_photo is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Not found')
     return new_photo
@@ -78,7 +78,7 @@ async def update_photo(photo_id: int = Path(description="The ID of the photo to 
 
 
 @router.delete("/{photo_id}", response_model=PhotoResponse)
-async def remove_photo(photo_id: int = Path(description="The ID of the photo to get"), 
+async def remove_photo(photo_id: int = Path(description="The ID of the photo to get"),
                        current_user: User = Depends(auth_service.get_current_user),
                        db: Session = Depends(get_db)):
     new_photo = await repository_photos.remove_photo(photo_id, current_user, db)
