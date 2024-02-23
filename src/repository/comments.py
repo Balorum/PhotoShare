@@ -8,6 +8,18 @@ from src.database.models import User, Comment
 from src.schemas.comments import CommentBase, CommentModel, CommentUpdate
 
 
+def serialize_comment(comment):
+    return {
+        "id": comment.id,
+        "text": comment.text,
+        "created_at": comment.created_at,
+        "updated_at": comment.updated_at,
+        "user_id": comment.user_id,
+        "photo_id": comment.photo_id,
+        "update_status": comment.update_status,
+    }
+
+
 async def create_comment(
     db: Session, comment_data: CommentModel, photo_id: int, user_id: int
 ):
@@ -70,7 +82,7 @@ async def get_comment_photo_user_id(db: Session, photo_id: int, user_id: int):
     )
 
 
-async def get_comment_photo_id(db: Session, photo_id: int):
+def get_comment_photo_id(db: Session, photo_id: int):
     """
     The get_comment_photo_id function takes in a photo_id and returns the comment associated with that photo.
         Args:
@@ -84,7 +96,8 @@ async def get_comment_photo_id(db: Session, photo_id: int):
     :return: A comment object
     :doc-author: Trelent
     """
-    return db.query(Comment).filter(Comment.photo_id == photo_id).first()
+    comments = db.query(Comment).filter(Comment.photo_id == photo_id).all()
+    return [serialize_comment(comment) for comment in comments]
 
 
 async def edit_comment(db: Session, comment_id: int, new_text: str):

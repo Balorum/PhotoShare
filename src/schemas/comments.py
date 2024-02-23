@@ -6,6 +6,10 @@ class CommentBase(BaseModel):
     text: str
 
 
+class CommentFind(CommentBase):
+    photo_id: int
+
+
 class CommentResponse(CommentBase):
     id: int
     text: str
