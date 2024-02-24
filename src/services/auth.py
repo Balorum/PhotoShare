@@ -153,9 +153,9 @@ class Auth:
         :return: A user object
         """
         credentials_exception = HTTPException(
-           status_code=status.HTTP_401_UNAUTHORIZED,
-           detail="Could not validate credentials",
-           headers={"WWW-Authenticate": "Bearer"},
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
         )
         try:
             # Decode JWT
@@ -210,6 +210,19 @@ class Auth:
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                 detail="Invalid token for email verification",
             )
+
+    def get_token_user(
+        token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)
+    ):
+        """
+        The get_token_user function is a dependency that will be used by the get_current_user function.
+        It takes in a token and returns the user associated with it.
+
+        :param token: str: Pass the token from the http request to this function
+        :param db: Session: Access the database
+        :return: The token, which is a string
+        """
+        return token
 
 
 auth_service = Auth()

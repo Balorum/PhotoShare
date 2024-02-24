@@ -57,8 +57,28 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
     return {"access_token": access_token, "refresh_token": refresh_token, "token_type": "bearer"}
 
 @router.post("/logout")
-async def logout():
-    pass
+async def logout(
+    token: str = Depends(auth_service.get_token_user),
+    current_user: UserModel = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    # Save token of user to table blacklists
+    """
+    The logout function is used to logout a user.
+        It takes the token of the user and returns a message that says User logged out successfully;.
+
+    :param token: str: Get the token of the user
+    :param current_user: UserBase: Get the user who is logged in
+    :param db: Session: Pass the database session to the function
+    :return: A dictionary with the status code, detail and token
+    """
+    await repository_users.save_black_list_token(token, current_user, db)
+
+    return {
+        "status_code": status.HTTP_200_OK,
+        "detail": "User logged out successfully",
+        "token": token,
+    }
 
 
 @router.get('/refresh_token', response_model=TokenSchema)

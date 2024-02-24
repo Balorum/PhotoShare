@@ -12,6 +12,7 @@ from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime
 
+
 Base = declarative_base()
 
 
@@ -91,3 +92,11 @@ class Comment(Base):
 
     user = relationship("User", backref="comments")
     post = relationship("Photo", backref="comments")
+
+
+class Blacklist(Base):
+    __tablename__ = "blacklists"
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, unique=True)
+    email = Column(String, nullable=False)
+    created_at = Column(DateTime, default=func.now())
