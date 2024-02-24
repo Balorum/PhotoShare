@@ -5,45 +5,49 @@ from sqlalchemy.orm import Session
 from sqlalchemy import and_
 from starlette import status
 
-from src.database.models import Rating, User, Post, UserRoleEnum
-from src.conf import messages as message
+from src.database.models import Rating, User, Photo
 
 
-async def create_rate(post_id: int, rate: int, db: Session, user: User) -> Rating:
+async def create_rate(photo_id: int, rate: int, db: Session, user: User) -> Rating:
 
     is_self_post = (
-        db.query(Post).filter(and_(Post.id == post_id, Post.user_id == user.id)).first()
+        db.query(Photo)
+        .filter(and_(Photo.id == photo_id, Photo.user_id == user.id))
+        .first()
     )
     already_voted = (
         db.query(Rating)
-        .filter(and_(Rating.post_id == post_id, Rating.user_id == user.id))
+        .filter(and_(Rating.photo_id == photo_id, Rating.user_id == user.id))
         .first()
     )
-    post_exists = db.query(Post).filter(Post.id == post_id).first()
+    photo_exists = db.query(Photo).filter(Photo.id == photo_id).first()
     if is_self_post:
-        raise HTTPException(status_code=status.HTTP_423_LOCKED, detail=message.OWN_POST)
+        raise HTTPException(
+            status_code=status.HTTP_423_LOCKED, detail="You can`t rate your own photo"
+        )
     elif already_voted:
         raise HTTPException(
-            status_code=status.HTTP_423_LOCKED, detail=message.VOTE_TWICE
+            status_code=status.HTTP_423_LOCKED,
+            detail="You can`t rate the same photo twice",
         )
-    elif post_exists:
-        new_rate = Rating(post_id=post_id, rate=rate, user_id=user.id)
+    elif photo_exists:
+        new_rate = Rating(photo_id=photo_id, rate=rate, user_id=user.id)
         db.add(new_rate)
         db.commit()
         db.refresh(new_rate)
         return new_rate
 
 
-async def edit_rate(
-    rate_id: int, new_rate: int, db: Session, user: User
-) -> Type[Rating] | None:
+# async def edit_rate(
+#     rate_id: int, new_rate: int, db: Session, user: User
+# ) -> Type[Rating] | None:
 
-    rate = db.query(Rating).filter(Rating.id == rate_id).first()
-    if user.role in [UserRoleEnum.admin, UserRoleEnum.moder] or rate.user_id == user.id:
-        if rate:
-            rate.rate = new_rate
-            db.commit()
-    return rate
+#     rate = db.query(Rating).filter(Rating.id == rate_id).first()
+#     if user.role in [UserRoleEnum.admin, UserRoleEnum.moder] or rate.user_id == user.id:
+#         if rate:
+#             rate.rate = new_rate
+#             db.commit()
+#     return rate
 
 
 async def delete_rate(rate_id: int, db: Session, user: User) -> Type[Rating]:
@@ -68,12 +72,12 @@ async def show_my_ratings(db: Session, user: User) -> list[Type[Rating]]:
 
 
 async def user_rate_post(
-    user_id: int, post_id: int, db: Session, user: User
+    user_id: int, photo_id: int, db: Session, user: User
 ) -> Type[Rating] | None:
 
     user_p_rate = (
         db.query(Rating)
-        .filter(and_(Rating.post_id == post_id, Rating.user_id == user_id))
+        .filter(and_(Rating.photo_id == photo_id, Rating.user_id == user_id))
         .first()
     )
     return user_p_rate

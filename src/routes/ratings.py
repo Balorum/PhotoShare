@@ -8,14 +8,14 @@ from src.schemas.photos import RatingModel, PhotoResponse
 from src.repository import ratings as repository_ratings
 from src.services.auth import auth_service
 
-from src.database.models import User, UserRoleEnum
-from src.conf import messages as message
+from src.database.models import User
+
 
 router = APIRouter(prefix="/ratings", tags=["ratings"])
 
 
 @router.post(
-    "/photos/{photo_id}/{rate}",
+    "/create/{photo_id}/{rate}",
     response_model=RatingModel,
 )
 async def create_rate(
@@ -106,17 +106,17 @@ async def all_my_rates(
 
 
 @router.get(
-    "/user_post/{user_id}/{post_id}",
+    "/user_photo/{user_id}/{photo_id}",
     response_model=RatingModel,
 )
 async def user_rate_post(
     user_id: int,
-    post_id: int,
+    photo_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(auth_service.get_current_user),
 ):
 
-    rate = await repository_ratings.user_rate_post(user_id, post_id, db, current_user)
+    rate = await repository_ratings.user_rate_post(user_id, photo_id, db, current_user)
     if rate is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return rate

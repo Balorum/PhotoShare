@@ -1,15 +1,8 @@
 import enum
-from sqlalchemy import (
-    Column,
-    Integer,
-    String,
-    Boolean,
-    func,
-    Table,
-    Text,
-)
+from sqlalchemy import Column, Integer, String, Boolean, func, Table, Text, Numeric
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql.schema import ForeignKey
+from sqlalchemy_utils import aggregated
 from sqlalchemy.sql.sqltypes import DateTime
 
 Base = declarative_base()
@@ -58,6 +51,12 @@ class Photo(Base):
     user_id = Column(
         "user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None
     )
+
+    @aggregated("rating", Column(Numeric))
+    def avg_rating(self):
+        return func.avg(Rating.rate)
+
+    rating = relationship("Rating")
     user = relationship("User", backref="photos")
 
 
@@ -92,3 +91,18 @@ class Comment(Base):
     user = relationship("User", backref="comments")
     post = relationship("Photo", backref="comments")
 
+
+class Rating(Base):
+    __tablename__ = "ratings"
+
+    id = Column(Integer, primary_key=True)
+    rate = Column(Integer, default=0)
+    created_at = Column(DateTime, default=func.now())
+    photo_id = Column(
+        "photo_id", ForeignKey("photos.id", ondelete="CASCADE"), nullable=False
+    )
+    user_id = Column(
+        "user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None
+    )
+
+    user = relationship("User", backref="ratings")
