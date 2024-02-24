@@ -78,7 +78,7 @@ async def get_comment_photo_user_id(db: Session, photo_id: int, user_id: int):
     return (
         db.query(Comment)
         .filter(Comment.photo_id == photo_id, Comment.user_id == user_id)
-        .first()
+        .all()
     )
 
 

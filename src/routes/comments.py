@@ -27,7 +27,7 @@ async def create_comment(
     photo_id: int,
     comment: CommentModel,
     db: Session = Depends(get_db),
-    current_user: User = Depends(auth_service.get_current_user_s),
+    current_user: User = Depends(auth_service.get_current_user),
 ):
     """
     The create_comment function creates a new comment for the image with the given ID.
@@ -41,12 +41,15 @@ async def create_comment(
     :return: A commentmodel object
     :doc-author: Trelent
     """
-    return await repository_comments.create_comment(
+    comment = await repository_comments.create_comment(
         db,
         comment,
         photo_id,
         current_user.id,
     )
+    if comment is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+    return comment
 
 
 @router.put("/edit/{comment_id}", response_model=CommentUpdate)
@@ -54,7 +57,7 @@ async def edit_comment(
     comment_id: int,
     new_text: str,
     db: Session = Depends(get_db),
-    current_user: User = Depends(auth_service.get_current_user_s),
+    current_user: User = Depends(auth_service.get_current_user),
 ):
     """
     The edit_comment function allows a user to edit their own comment.
@@ -103,11 +106,11 @@ async def delete_comment(
     :return: The comment that was deleted
     :doc-author: Trelent
     """
-    if not auth_service.is_admin_or_moderator(current_user):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Only admins and moderators can delete comments",
-        )
+    # if not auth_service.is_admin_or_moderator(current_user):
+    #     raise HTTPException(
+    #         status_code=status.HTTP_403_FORBIDDEN,
+    #         detail="Only admins and moderators can delete comments",
+    #     )
     comment = await repository_comments.get_comment(db, comment_id)
     if not comment:
         raise HTTPException(
@@ -117,12 +120,12 @@ async def delete_comment(
     return comment
 
 
-@router.get("/get_comment_id/", response_model=CommentModel)
+@router.get("/get_comment_id/", response_model=List[CommentResponse])
 async def get_comment_photo_user_id_route(
     db: Session = Depends(get_db),
     user_id: int = None,
     photo_id: int = None,
-    current_user: User = Depends(auth_service.get_current_user_s),
+    current_user: User = Depends(auth_service.get_current_user),
 ):
     """
     The get_comment_photo_user_id_route function returns a list of comments for the specified photo_id and user_id.
@@ -142,7 +145,12 @@ async def get_comment_photo_user_id_route(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="user_id cannot be empty"
         )
-    return await repository_comments.get_comment_photo_user_id(db, photo_id, user_id)
+    comments = await repository_comments.get_comment_photo_user_id(
+        db, photo_id, user_id
+    )
+    if comments == []:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+    return comments
 
 
 @router.get("/get_comment_photo_id/{photo_id}", response_model=List[CommentModel])
