@@ -84,11 +84,10 @@ class Comment(Base):
     user_id = Column(
         "user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None
     )
-    post_id = Column(
+    photo_id = Column(
         "photo_id", ForeignKey("photos.id", ondelete="CASCADE"), default=None
     )
     update_status = Column(Boolean, default=False)
 
     user = relationship("User", backref="comments")
     post = relationship("Photo", backref="comments")
-
