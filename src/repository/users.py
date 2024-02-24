@@ -196,3 +196,37 @@ async def remove_from_ban(email: str, db: Session) -> None:
     user = await get_user_by_email(email, db)
     user.is_active = True
     db.commit()
+
+
+async def delete_user(user_id: int, db: Session):
+    """
+    The delete_user function deletes a user from the database.
+
+    :param user_id: int: Specify the id of the user to be deleted
+    :param db: Session: Pass in the database session
+    :return: None
+    """
+
+    user = db.query(User).filter_by(id = user_id).first()
+    if user:
+        db.delete(user)
+        db.commit()
+    return user 
+
+
+async def save_black_list_token(token: str, user: User, db):
+    """
+    The save_black_list_token function saves a token to the blacklist.
+        Args:
+            token (str): The JWT auth_token that is being saved to the blacklist.
+            current_user (User): The user who's token is being saved to the blacklist.
+
+    :param token: str: Pass the token that is being blacklisted
+    :param current_user: auth_service.get_current_user: Get the current user
+    :param db: Access the database
+    :return: The token that was saved
+    """
+    blacklist_token = Blacklist(token=token, email=user.email)
+    db.add(blacklist_token)
+    db.commit()
+    db.refresh(blacklist_token)

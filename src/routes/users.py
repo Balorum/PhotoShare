@@ -250,3 +250,27 @@ async def remove_from_ban(body: RequestEmail, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail="This email is already active"
         )    
+
+@router.delete(
+    "/delete/{user_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    dependencies=[Depends(access_admin)],
+)
+async def delete_user(user_id: int, db: Session = Depends(get_db)):
+    """
+    The delete_user function deletes a user from the database.
+        Args:
+            user_id (int): users.id will be deleted.
+            db (Session, optional): SQLAlchemy Session. Defaults to Depends(get_db).
+    
+    :param user_id: int: Identify the user to be deleted
+    :param db: Session: Pass the database connection to the function
+    :return: A user object
+    """
+    print(user_id)
+    user = await repository_users.delete_user(user_id, db)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NO_CONTENT, detail="User Not Found"
+        )
+    return user
