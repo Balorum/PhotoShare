@@ -8,8 +8,6 @@ from alembic import context
 from src.database.models import Base
 from src.database.db import SQLALCHEMY_DATABASE_URL
 
-SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://andmyr:W596@localhost:5432/postgres"
-
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -19,12 +17,14 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
+
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
-config.set_main_option("sqlalchemy.url", SQLALCHEMY_DATABASE_URL)
+
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")

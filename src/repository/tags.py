@@ -8,12 +8,13 @@ from src.schemas.photos import TagBase, TagModel
 
 
 async def get_my_tags(tag_id: int, user: User, db: Session) -> List[Tag]:
-    return db.query(Tag).filter(and_(Tag.id == tag_id, Tag.user_id == 1)).first()
+    return db.query(Tag).filter(and_(Tag.id == tag_id, Tag.user_id == user.id)).first()
+
 
 async def create_tag(body: TagModel, user: User, db: Session) -> Tag:
     """
     Creates a new tag for our API.
-    
+
     :param body: Get the title of the tag from the request body
     :type body: TagModel
     :param user: Get the user id of the current user
@@ -29,7 +30,7 @@ async def create_tag(body: TagModel, user: User, db: Session) -> Tag:
     if tag == None:
         tag = Tag(
             title=val_title,
-            user_id = 1,
+            user_id=user.id,
         )
         db.add(tag)
         db.commit()
@@ -40,7 +41,7 @@ async def create_tag(body: TagModel, user: User, db: Session) -> Tag:
 async def get_all_tags(skip: int, limit: int, user: User, db: Session) -> List[Tag]:
     """
     Returns all tags of our API.
-    
+
     :param skip: The number of tags to skip.
     :type skip: int
     :param limit: The maximum number of tags to return.
@@ -58,7 +59,7 @@ async def get_all_tags(skip: int, limit: int, user: User, db: Session) -> List[T
 async def update_tag(tag_id: int, body: TagBase, user: User, db: Session) -> Tag | None:
     """
     Update tag.
-    
+
     :param tag_id: The ID of the tag to retrieve.
     :type tag_id: int
     :param body: Get the new fields of the tag from the request body.
@@ -80,7 +81,7 @@ async def update_tag(tag_id: int, body: TagBase, user: User, db: Session) -> Tag
 async def remove_tag(tag_id: int, user: User, db: Session) -> Tag | None:
     """
     Delete tag.
-    
+
     :param tag_id: The ID of the tag to retrieve.
     :type tag_id: int
     :param user: The user to delete tag for.
@@ -95,6 +96,3 @@ async def remove_tag(tag_id: int, user: User, db: Session) -> Tag | None:
         db.delete(tag)
         db.commit()
     return tag
-
-
-

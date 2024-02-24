@@ -8,7 +8,7 @@ from sqlalchemy import func
 from sqlalchemy.orm import Session
 
 from src.conf.config import cloud_init
-from src.database.models import User, Role, Comment, Photo
+from src.database.models import User, Role, Comment, Photo, Blacklist
 from src.schemas.users import UserModel, RequestEmail, UserProfileModel
 
 

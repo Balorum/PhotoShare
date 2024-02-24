@@ -46,7 +46,7 @@ async def create_photo(
         f"PhotoShareApp/{current_user.username}"
     ).build_url(width=250, height=250, crop="fill", version=r.get("version"))
     if tags:
-        tags = create_or_get_tag(tags[0].split(","), 1, db)
+        tags = create_or_get_tag(tags[0].split(","), current_user.id, db)
     new_photo = Photo(
         image_url=src_url,
         title=title,
@@ -104,14 +104,14 @@ async def update_photo(
     return new_photo
 
 
-def create_or_get_tag(titles: list[str], current_user: User, db: Session):
+def create_or_get_tag(titles: list[str], user_id: int, db: Session):
     tags = []
     for title in titles:
         tag = db.query(Tag).filter(Tag.title == title.lower()).first()
         if not tag:
             tag = Tag(
                 title=title.lower(),
-                user_id=current_user,
+                user_id=user_id,
             )
             db.add(tag)
             db.commit()
