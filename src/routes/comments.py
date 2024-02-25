@@ -30,7 +30,7 @@ access_comment = RoleChecker([Role.user])
     "/create_comment/{photo_id}",
     response_model=CommentResponse,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[Depends(access_comment)],
+    dependencies=[Depends(access_get)],
 )
 async def create_comment(
     photo_id: int,
@@ -64,7 +64,7 @@ async def create_comment(
 @router.put(
     "/edit/{comment_id}",
     response_model=CommentUpdate,
-    dependencies=[Depends(access_comment)],
+    dependencies=[Depends(access_get)],
 )
 async def edit_comment(
     comment_id: int,
