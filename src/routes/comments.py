@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import List
 
 from src.database.db import get_db
-from src.database.models import User
+from src.database.models import User, Role
 from src.schemas.comments import (
     CommentBase,
     CommentFind,
@@ -14,14 +14,23 @@ from src.schemas.comments import (
 )
 from src.repository import comments as repository_comments
 from src.services.auth import auth_service
+from src.services.roles import RoleChecker
+
 
 router = APIRouter(prefix="/comments", tags=["comments"])
+
+access_get = RoleChecker([Role.admin, Role.moderator, Role.user])
+access_update = RoleChecker([Role.admin, Role.moderator, Role.user])
+access_delite = RoleChecker([Role.admin, Role.moderator])
+access_admin = RoleChecker([Role.admin])
+access_comment = RoleChecker([Role.user])
 
 
 @router.post(
     "/create_comment/{photo_id}",
     response_model=CommentResponse,
     status_code=status.HTTP_201_CREATED,
+    dependencies=[Depends(access_get)],
 )
 async def create_comment(
     photo_id: int,
@@ -52,7 +61,11 @@ async def create_comment(
     return comment
 
 
-@router.put("/edit/{comment_id}", response_model=CommentUpdate)
+@router.put(
+    "/edit/{comment_id}",
+    response_model=CommentUpdate,
+    dependencies=[Depends(access_get)],
+)
 async def edit_comment(
     comment_id: int,
     new_text: str,
@@ -88,7 +101,11 @@ async def edit_comment(
     return updated_comment
 
 
-@router.delete("/delete/{comment_id}", response_model=CommentModel)
+@router.delete(
+    "/delete/{comment_id}",
+    response_model=CommentModel,
+    dependencies=[Depends(access_delite)],
+)
 async def delete_comment(
     comment_id: int,
     db: Session = Depends(get_db),
@@ -120,7 +137,11 @@ async def delete_comment(
     return comment
 
 
-@router.get("/get_comment_id/", response_model=List[CommentResponse])
+@router.get(
+    "/get_comment_id/",
+    response_model=List[CommentResponse],
+    dependencies=[Depends(access_get)],
+)
 async def get_comment_photo_user_id_route(
     db: Session = Depends(get_db),
     user_id: int = None,
@@ -153,7 +174,11 @@ async def get_comment_photo_user_id_route(
     return comments
 
 
-@router.get("/get_comment_photo_id/{photo_id}", response_model=List[CommentModel])
+@router.get(
+    "/get_comment_photo_id/{photo_id}",
+    response_model=List[CommentModel],
+    dependencies=[Depends(access_get)],
+)
 async def get_comment_photo_id_route(
     photo_id: int,
     db: Session = Depends(get_db),
