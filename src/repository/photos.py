@@ -8,7 +8,7 @@ import cloudinary.uploader
 from fastapi import Request, UploadFile, Query
 from sqlalchemy.orm import Session
 
-from src.database.models import Photo, Tag, User, Comment
+from src.database.models import Photo, Tag, User, Comment, Role
 from src.conf.config import settings, cloud_init
 
 
@@ -27,18 +27,22 @@ async def get_user_photos(skip, limit, current_user, db) -> List[Photo]:
 
 
 async def get_photo(photo_id: int, current_user: User, db: Session) -> Photo:
-    return db.query(Photo).filter(Photo.id == photo_id).first()
+    if current_user.role == Role.admin:
+        return db.query(Photo).filter(Photo.id == photo_id).first()
+    else:
+        return db.query(Photo).filter(Photo.user_id == current_user.id).filter(Photo.id == photo_id).first()
 
 
 async def create_photo(
-    title: Annotated[str, Query(max_length=50)],
-    description: Annotated[str, Query(max_length=150)],
-    tags: List[str],
-    current_user: User,
-    file: UploadFile,
-    db: Session,
+        title: Annotated[str, Query(max_length=50)],
+        description: Annotated[str, Query(max_length=150)],
+        tags: List[str],
+        current_user: User,
+        file: UploadFile,
+        db: Session,
 ) -> Photo:
     cloud_init()
+
     r = cloudinary.uploader.upload(
         file.file, public_id=f"PhotoShareApp/{current_user.username}", overwrite=True
     )
@@ -70,13 +74,13 @@ async def remove_photo(photo_id: int, current_user: User, db: Session) -> Photo 
 
 
 async def update_photo(
-    photo_id: int,
-    title: Annotated[str, Query(max_length=50)],
-    description: Annotated[str, Query(max_length=150)],
-    tags: List[str],
-    current_user: User,
-    file: UploadFile,
-    db: Session,
+        photo_id: int,
+        title: Annotated[str, Query(max_length=50)],
+        description: Annotated[str, Query(max_length=150)],
+        tags: List[str],
+        current_user: User,
+        file: UploadFile,
+        db: Session,
 ) -> Photo | None:
     new_photo = await get_photo(photo_id, current_user, db)
     if new_photo:
