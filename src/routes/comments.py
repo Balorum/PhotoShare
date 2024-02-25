@@ -23,7 +23,8 @@ access_get = RoleChecker([Role.admin, Role.moderator, Role.user])
 access_update = RoleChecker([Role.admin, Role.moderator, Role.user])
 access_delite = RoleChecker([Role.admin, Role.moderator])
 access_admin = RoleChecker([Role.admin])
-access_comment = RoleChecker(Role.user])
+access_comment = RoleChecker([Role.user])
+
 
 @router.post(
     "/create_comment/{photo_id}",
@@ -60,7 +61,11 @@ async def create_comment(
     return comment
 
 
-@router.put("/edit/{comment_id}", response_model=CommentUpdate, dependencies=[Depends(access_comment)])
+@router.put(
+    "/edit/{comment_id}",
+    response_model=CommentUpdate,
+    dependencies=[Depends(access_comment)],
+)
 async def edit_comment(
     comment_id: int,
     new_text: str,
@@ -96,7 +101,11 @@ async def edit_comment(
     return updated_comment
 
 
-@router.delete("/delete/{comment_id}", response_model=CommentModel, dependencies=[Depends(access_delite)])
+@router.delete(
+    "/delete/{comment_id}",
+    response_model=CommentModel,
+    dependencies=[Depends(access_delite)],
+)
 async def delete_comment(
     comment_id: int,
     db: Session = Depends(get_db),
@@ -128,7 +137,11 @@ async def delete_comment(
     return comment
 
 
-@router.get("/get_comment_id/", response_model=List[CommentResponse]dependencies=[Depends(access_get)])
+@router.get(
+    "/get_comment_id/",
+    response_model=List[CommentResponse],
+    dependencies=[Depends(access_get)],
+)
 async def get_comment_photo_user_id_route(
     db: Session = Depends(get_db),
     user_id: int = None,
@@ -161,7 +174,11 @@ async def get_comment_photo_user_id_route(
     return comments
 
 
-@router.get("/get_comment_photo_id/{photo_id}", response_model=List[CommentModel]dependencies=[Depends(access_get)])
+@router.get(
+    "/get_comment_photo_id/{photo_id}",
+    response_model=List[CommentModel],
+    dependencies=[Depends(access_get)],
+)
 async def get_comment_photo_id_route(
     photo_id: int,
     db: Session = Depends(get_db),
