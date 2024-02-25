@@ -1,9 +1,42 @@
 import pytest
-from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
-from src.database.models import Comment, User
+from src.database.db import get_db
 from src.repository import comments
-from tests.utils import generate_comment, generate_user
+from src.database.models import User, Comment
+from faker import Faker
+import random
+
+fake = Faker()
+
+
+@pytest.fixture
+def db_session():
+    db = get_db()
+    session = db.session()
+    yield session
+    session.rollback()
+
+
+def generate_user() -> User:
+    return User(
+        username=fake.user_name(),
+        email=fake.email(),
+        full_name=fake.name(),
+        hashed_password=fake.password(),
+        is_active=True,
+        is_superuser=False,
+    )
+
+
+def generate_comment(user_id: int, photo_id: int) -> Comment:
+    return Comment(
+        text=fake.paragraph(),
+        user_id=user_id,
+        photo_id=photo_id,
+        created_at=fake.date_time_between(start_date="-30d", end_date="now"),
+        updated_at=fake.date_time_between(start_date="-30d", end_date="now"),
+        update_status=random.choice([True, False]),
+    )
 
 
 @pytest.mark.asyncio
