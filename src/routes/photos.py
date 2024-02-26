@@ -87,11 +87,6 @@ async def show_photo_by_id(
     return new_photo
 
 
-@router.get("/comments/all/{photo_id}", response_model=List[CommentModel])
-async def show_photo_comments():
-    pass
-
-
 @router.put("/{photo_id}", response_model=PhotoResponse)
 async def update_photo(
     photo_id: int = Path(description="The ID of the photo to get"),
