@@ -11,20 +11,6 @@ from src.conf.config import settings
 app = FastAPI()
 
 
-@app.on_event("startup")
-async def startup():
-    # r = await redis.Redis(
-    #     host=settings.redis_host,
-    #     port=settings.redis_port,
-    #     password=settings.redis_password,
-    #     db=0,
-    #     encoding="utf-8",
-    #     decode_responses=True
-    # )
-    # await FastAPILimiter.init(r)
-    pass
-
-
 @app.get("/")
 def read_root():
     return {"message": "Hello world!"}

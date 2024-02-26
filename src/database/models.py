@@ -5,6 +5,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy_utils import aggregated
 from sqlalchemy.sql.sqltypes import DateTime
 
+
 Base = declarative_base()
 
 
@@ -83,7 +84,7 @@ class Comment(Base):
     user_id = Column(
         "user_id", ForeignKey("users.id", ondelete="CASCADE"), default=None
     )
-    post_id = Column(
+    photo_id = Column(
         "photo_id", ForeignKey("photos.id", ondelete="CASCADE"), default=None
     )
     update_status = Column(Boolean, default=False)
@@ -106,3 +107,11 @@ class Rating(Base):
     )
 
     user = relationship("User", backref="ratings")
+
+    
+class Blacklist(Base):
+    __tablename__ = "blacklists"
+    id = Column(Integer, primary_key=True, index=True)
+    token = Column(String, unique=True)
+    email = Column(String, nullable=False)
+    created_at = Column(DateTime, default=func.now())

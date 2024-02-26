@@ -12,7 +12,7 @@ import io
 async def get_transform_url(
     photo_id: int, transforms: TransformModel, current_user: User, db: Session
 ):
-    photo = await get_photo(photo_id, db)
+    photo = await get_photo(photo_id, current_user, db)
     if photo:
         cloud_init()
         param_dict = dict()
@@ -61,7 +61,7 @@ async def get_transform_url(
 
 
 async def get_qr_code(photo_id: int, current_user: User, db: Session):
-    photo = await get_photo(photo_id, db)
+    photo = await get_photo(photo_id, current_user, db)
     if photo:
         qr = qrcode.QRCode(
             version=1,
