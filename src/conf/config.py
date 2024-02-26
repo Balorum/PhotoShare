@@ -12,7 +12,9 @@ def cloud_init():
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    sqlalchemy_database_url: str = (
+        "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    )
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"
@@ -28,7 +30,7 @@ class Settings(BaseSettings):
     cloudinary_api_secret: str = "secret"
 
     class Config:
-        extra = 'ignore'
+        extra = "ignore"
         env_file = ".env"
         env_file_encoding = "utf-8"
 

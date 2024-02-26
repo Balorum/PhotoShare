@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fastapi import UploadFile, File, Form
 from pydantic import BaseModel, Field
-from typing import List
+from typing import List, Optional
 
 
 class TagModel(BaseModel):
@@ -27,14 +27,18 @@ class TagResponse(TagBase):
         orm_mode = True
 
 
+class RatingBase(BaseModel):
+    rate: int
+
+    class Config:
+        orm_mode = True
+
+
 class PhotoResponse(PhotoBase):
     id: int
     created_at: datetime
     tags: List[TagResponse] | None
-
-
-class RatingBase(BaseModel):
-    rate: int
+    avg_rating: Optional[float] = 0.0
 
 
 class RatingModel(RatingBase):

@@ -38,24 +38,35 @@ async def create_rate(photo_id: int, rate: int, db: Session, user: User) -> Rati
         return new_rate
 
 
-# async def edit_rate(
-#     rate_id: int, new_rate: int, db: Session, user: User
-# ) -> Type[Rating] | None:
+async def edit_rate(
+    rate_id: int, new_rate: int, db: Session, user: User
+) -> Type[Rating] | None:
 
-#     rate = db.query(Rating).filter(Rating.id == rate_id).first()
-#     if user.role in [UserRoleEnum.admin, UserRoleEnum.moder] or rate.user_id == user.id:
-#         if rate:
-#             rate.rate = new_rate
-#             db.commit()
-#     return rate
+    rate = db.query(Rating).filter(Rating.id == rate_id).first()
+    if rate.user_id == user.id:
+        if rate:
+            rate.rate = new_rate
+            db.commit()
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_423_LOCKED,
+            detail="You can`t edit someone else's rate",
+        )
+    return rate
 
 
 async def delete_rate(rate_id: int, db: Session, user: User) -> Type[Rating]:
 
     rate = db.query(Rating).filter(Rating.id == rate_id).first()
-    if rate:
-        db.delete(rate)
-        db.commit()
+    if user.role in ["admin", "moderator"] or rate.user_id == user.id:
+        if rate:
+            db.delete(rate)
+            db.commit()
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_423_LOCKED,
+            detail="You can`t delete someone else's rate",
+        )
     return rate
 
 
