@@ -108,7 +108,7 @@ class Rating(Base):
 
     user = relationship("User", backref="ratings")
 
-    
+
 class Blacklist(Base):
     __tablename__ = "blacklists"
     id = Column(Integer, primary_key=True, index=True)
