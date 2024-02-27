@@ -8,16 +8,17 @@ from src.repository.comments import (
     edit_comment,
     delete_comment,
 )
-from asynctest import TestCase, CoroutineMock
+
+# from asynctest import TestCase, CoroutineMock
 import sys
 
 # sys.path.append("../../src")
 
-"""
-class TestCommentRepository(TestCase):
+
+class TestCommentRepository(unittest.TestCase):
 
     def setUp(self):
-        engine = create_engine("sqlite:///./test.db:")
+        engine = create_engine("sqlite:///./test.db")
         Base.metadata.create_all(engine)
         self.Session = sessionmaker(bind=engine)
 
@@ -69,7 +70,3 @@ class TestCommentRepository(TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-    
-
-"""
