@@ -52,6 +52,7 @@ def user():
         "username": "deadpool",
         "email": "deadpool@example.com",
         "password": "123456789",
+        "role": "admin",
     }
 
 

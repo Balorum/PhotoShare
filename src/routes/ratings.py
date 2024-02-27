@@ -48,7 +48,7 @@ async def edit_rate(
     )
     if edited_rate is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Comment not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Rate not found"
         )
     return edited_rate
 

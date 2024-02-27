@@ -43,15 +43,15 @@ async def edit_rate(
 ) -> Type[Rating] | None:
 
     rate = db.query(Rating).filter(Rating.id == rate_id).first()
-    if rate.user_id == user.id:
-        if rate:
+    if rate:
+        if rate.user_id == user.id:
             rate.rate = new_rate
             db.commit()
-    else:
-        raise HTTPException(
-            status_code=status.HTTP_423_LOCKED,
-            detail="You can`t edit someone else's rate",
-        )
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_423_LOCKED,
+                detail="You can`t edit someone else's rate",
+            )
     return rate
 
 
