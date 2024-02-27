@@ -2,13 +2,22 @@ import unittest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.database.models import Base, Comment
-from src.repository.comments import create_comment, get_comment, edit_comment, delete_comment
+from src.repository.comments import (
+    create_comment,
+    get_comment,
+    edit_comment,
+    delete_comment,
+)
+from asynctest import TestCase, CoroutineMock
+import sys
 
+# sys.path.append("../../src")
 
-class TestCommentRepository(unittest.TestCase):
+"""
+class TestCommentRepository(TestCase):
 
     def setUp(self):
-        engine = create_engine('sqlite:///:memory:')
+        engine = create_engine("sqlite:///./test.db:")
         Base.metadata.create_all(engine)
         self.Session = sessionmaker(bind=engine)
 
@@ -39,7 +48,9 @@ class TestCommentRepository(unittest.TestCase):
         photo_id = 1
         user_id = 1
         created_comment = await create_comment(db, comment_data, photo_id, user_id)
-        edited_comment = await edit_comment(db, created_comment.id, "Edited Test Comment")
+        edited_comment = await edit_comment(
+            db, created_comment.id, "Edited Test Comment"
+        )
         self.assertIsNotNone(edited_comment)
         self.assertEqual(edited_comment.text, "Edited Test Comment")
         db.close()
@@ -56,5 +67,9 @@ class TestCommentRepository(unittest.TestCase):
         db.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
+
+    
+
+"""

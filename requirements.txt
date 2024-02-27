@@ -11,6 +11,8 @@ psycopg2
 sqlalchemy
 fastapi-mail
 pytest
+asynctest
+pytest-asyncio
 python-multipart
 cloudinary
 python-jose[cryptography]
