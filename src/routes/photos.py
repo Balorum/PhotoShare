@@ -13,7 +13,6 @@ from sqlalchemy.orm import Session
 
 from src.database.db import get_db
 from src.database.models import User, Role
-from src.database.models import Tag
 from src.schemas.photos import PhotoResponse, CommentModel
 from src.repository import photos as repository_photos
 from src.services.auth import auth_service

@@ -27,6 +27,10 @@ async def get_user_photos(skip, limit, current_user, db) -> List[Photo]:
 
 
 async def get_photo(photo_id: int, current_user: User, db: Session) -> Photo:
+    return db.query(Photo).filter(Photo.id == photo_id).first()
+
+
+async def get_photo_by_id(photo_id: int, current_user: User, db: Session) -> Photo:
     if current_user.role == "admin":
         return db.query(Photo).filter(Photo.id == photo_id).first()
     else:
@@ -39,12 +43,12 @@ async def get_photo(photo_id: int, current_user: User, db: Session) -> Photo:
 
 
 async def create_photo(
-    title: Annotated[str, Query(max_length=50)],
-    description: Annotated[str, Query(max_length=150)],
-    tags: List[str],
-    current_user: User,
-    file: UploadFile,
-    db: Session,
+        title: Annotated[str, Query(max_length=50)],
+        description: Annotated[str, Query(max_length=150)],
+        tags: List[str],
+        current_user: User,
+        file: UploadFile,
+        db: Session,
 ) -> Photo:
     cloud_init()
 
@@ -71,7 +75,7 @@ async def create_photo(
 
 
 async def remove_photo(photo_id: int, current_user: User, db: Session) -> Photo | None:
-    new_photo = await get_photo(photo_id, current_user, db)
+    new_photo = await get_photo_by_id(photo_id, current_user, db)
     if new_photo:
         db.delete(new_photo)
         db.commit()
@@ -79,15 +83,15 @@ async def remove_photo(photo_id: int, current_user: User, db: Session) -> Photo 
 
 
 async def update_photo(
-    photo_id: int,
-    title: Annotated[str, Query(max_length=50)],
-    description: Annotated[str, Query(max_length=150)],
-    tags: List[str],
-    current_user: User,
-    file: UploadFile,
-    db: Session,
+        photo_id: int,
+        title: Annotated[str, Query(max_length=50)],
+        description: Annotated[str, Query(max_length=150)],
+        tags: List[str],
+        current_user: User,
+        file: UploadFile,
+        db: Session,
 ) -> Photo | None:
-    new_photo = await get_photo(photo_id, current_user, db)
+    new_photo = await get_photo_by_id(photo_id, current_user, db)
     if new_photo:
         new_photo.title = title if title else new_photo.title
         new_photo.description = description if description else new_photo.description
