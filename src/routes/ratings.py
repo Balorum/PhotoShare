@@ -39,7 +39,7 @@ async def create_rate(
 )
 async def edit_rate(
     rate_id: int,
-    new_rate: int,
+    new_rate: int = Path(description="From one to five stars of rating.", ge=1, le=5),
     db: Session = Depends(get_db),
     current_user: User = Depends(auth_service.get_current_user),
 ):
