@@ -36,16 +36,17 @@ async def create_photo(
     tags: List[str] = Form(None),
     db: Session = Depends(get_db),
 ):
-    if len(tags[0].split(",")) >= 5:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="There cannot be more than five tags",
-        )
+    if tags:
+        if len(tags[0].split(",")) > 5:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="There cannot be more than five tags",
+            )
     new_photo = await repository_photos.create_photo(
         title, description, tags, current_user, file, db
     )
     if new_photo is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return new_photo
 
 
@@ -59,7 +60,7 @@ async def show_all_user_photos(
     posts = await repository_photos.get_user_photos(skip, limit, current_user, db)
     if posts is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Posts not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail="Photos not found"
         )
     return posts
 
@@ -82,7 +83,7 @@ async def show_photo_by_id(
 ):
     new_photo = await repository_photos.get_photo(photo_id, current_user, db)
     if new_photo is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return new_photo
 
 
@@ -101,16 +102,17 @@ async def update_photo(
     tags: List[str] = Form(None),
     db: Session = Depends(get_db),
 ):
-    if len(tags[0].split(",")) >= 5:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="There cannot be more than five tags",
-        )
+    if tags != [""] and tags != None:
+        if len(tags[0].split(",")) > 5:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="There cannot be more than five tags",
+            )
     new_photo = await repository_photos.update_photo(
         photo_id, title, description, tags, current_user, file, db
     )
     if new_photo is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return new_photo
 
 
@@ -122,5 +124,5 @@ async def remove_photo(
 ):
     new_photo = await repository_photos.remove_photo(photo_id, current_user, db)
     if new_photo is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not Found")
     return new_photo

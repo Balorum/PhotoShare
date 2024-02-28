@@ -30,6 +30,7 @@ class TagResponse(TagBase):
 class PhotoResponse(PhotoBase):
     id: int
     created_at: datetime
+    image_url: str
     tags: List[TagResponse] | None
 
 

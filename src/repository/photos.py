@@ -43,12 +43,12 @@ async def get_photo_by_id(photo_id: int, current_user: User, db: Session) -> Pho
 
 
 async def create_photo(
-        title: Annotated[str, Query(max_length=50)],
-        description: Annotated[str, Query(max_length=150)],
-        tags: List[str],
-        current_user: User,
-        file: UploadFile,
-        db: Session,
+    title: Annotated[str, Query(max_length=50)],
+    description: Annotated[str, Query(max_length=150)],
+    tags: List[str],
+    current_user: User,
+    file: UploadFile,
+    db: Session,
 ) -> Photo:
     cloud_init()
 
@@ -58,8 +58,10 @@ async def create_photo(
     src_url = cloudinary.CloudinaryImage(
         f"PhotoShareApp/{current_user.username}"
     ).build_url(width=250, height=250, crop="fill", version=r.get("version"))
-    if tags:
+    if tags != [""]:
         tags = create_or_get_tag(tags[0].split(","), current_user.id, db)
+    else:
+        tags = []
     new_photo = Photo(
         image_url=src_url,
         title=title,
@@ -83,13 +85,13 @@ async def remove_photo(photo_id: int, current_user: User, db: Session) -> Photo 
 
 
 async def update_photo(
-        photo_id: int,
-        title: Annotated[str, Query(max_length=50)],
-        description: Annotated[str, Query(max_length=150)],
-        tags: List[str],
-        current_user: User,
-        file: UploadFile,
-        db: Session,
+    photo_id: int,
+    title: Annotated[str, Query(max_length=50)],
+    description: Annotated[str, Query(max_length=150)],
+    tags: List[str],
+    current_user: User,
+    file: UploadFile,
+    db: Session,
 ) -> Photo | None:
     new_photo = await get_photo_by_id(photo_id, current_user, db)
     if new_photo:
@@ -97,9 +99,10 @@ async def update_photo(
         new_photo.description = description if description else new_photo.description
         new_photo.tags = (
             create_or_get_tag(tags[0].split(","), current_user.id, db)
-            if tags
-            else new_photo.description
+            if (tags != [""] and tags != None)
+            else []
         )
+
         if file:
             cloud_init()
             r = cloudinary.uploader.upload(

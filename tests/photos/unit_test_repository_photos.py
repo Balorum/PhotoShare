@@ -84,7 +84,7 @@ class TestContact(unittest.IsolatedAsyncioTestCase):
 
         title = "photo_title"
         description = "photo_description"
-        tags = ["test_tag1", "test_tag2", "test_tag3"]
+        tags = ["test_tag1"]
         file = create_file()
 
         result = await create_photo(
@@ -99,7 +99,7 @@ class TestContact(unittest.IsolatedAsyncioTestCase):
         user_id = 1
         title = "photo_title"
         description = "photo_description"
-        tags = []
+        tags = ["test_tag1"]
         image_url = "photo_file"
         file = create_file()
 
