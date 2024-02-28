@@ -3,16 +3,30 @@ import cloudinary.uploader
 from src.conf.config import cloud_init
 from src.schemas.transform import TransformModel
 from sqlalchemy.orm import Session
-from src.repository.photos import get_photo
+from src.repository.photos import get_photo_by_id
 import qrcode
 from src.database.models import User, Photo
 import io
 
 
 async def get_transform_url(
+
     photo_id: int, transforms: TransformModel, current_user: User, db: Session
 ):
-    photo = await get_photo(photo_id, current_user, db)
+    """
+    Get a transform_url with specified photo for a specific user
+    :param photo_id: id of the photo
+    :type photo_id: int
+    :param transforms: transforms model
+    :type transforms: TransformModel
+    :param current_user: user who want to transform the photo
+    :type current_user: User
+    :param db: The database session
+    :type db: Session
+    :return: transform_url
+    :rtype: string
+    """
+    photo = await get_photo_by_id(photo_id, current_user, db)
     if photo:
         cloud_init()
         param_dict = dict()
@@ -61,7 +75,19 @@ async def get_transform_url(
 
 
 async def get_qr_code(photo_id: int, current_user: User, db: Session):
-    photo = await get_photo(photo_id, current_user, db)
+    """
+    Get a qr_code_url with specified photo for a specific user
+    :param photo_id: id of the photo
+    :type photo_id: int
+    :param current_user:
+    :param current_user: user who want to transform the photo
+    :type current_user: User
+    :param db: The database session
+    :type db: Session
+    :return: qr_code_url
+    :rtype: string
+    """
+    photo = await get_photo_by_id(photo_id, current_user, db)
     if photo:
         qr = qrcode.QRCode(
             version=1,

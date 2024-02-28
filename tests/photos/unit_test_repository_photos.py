@@ -10,7 +10,6 @@ from fastapi import UploadFile
 from sqlalchemy.orm import Session
 from datetime import datetime
 from src.database.models import Photo, User, Tag
-from src.schemas.photos import PhotoBase
 from src.repository.photos import (
     get_photos,
     get_user_photos,
@@ -27,8 +26,7 @@ def create_file():
     image = Image.new("RGB", size=(100, 100), color=(255, 0, 0))
     image.save(file_data, "jpeg")
     file_data.seek(0)
-    file = UploadFile(file_data)
-    return file
+    return file_data
 
 
 class TestContact(unittest.IsolatedAsyncioTestCase):
@@ -81,7 +79,6 @@ class TestContact(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result, photo)
 
     async def test_create_photo(self):
-
         title = "photo_title"
         description = "photo_description"
         tags = ["test_tag1", "test_tag2", "test_tag3"]
@@ -94,7 +91,7 @@ class TestContact(unittest.IsolatedAsyncioTestCase):
         assert result.title == title
         assert result.description == description
 
-    async def test_update_contact(self):
+    async def test_update_photo(self):
         id = 1
         user_id = 1
         title = "photo_title"

@@ -3,7 +3,7 @@ from PIL import Image
 import io
 import pytest
 
-from fastapi import UploadFile
+from fastapi import File
 from src.database.models import User
 from src.services.auth import auth_service
 
@@ -13,8 +13,7 @@ def create_file():
     image = Image.new("RGB", size=(100, 100), color=(255, 0, 0))
     image.save(file_data, "jpeg")
     file_data.seek(0)
-    file = UploadFile(file_data)
-    return file
+    return file_data
 
 
 @pytest.fixture()
@@ -44,7 +43,6 @@ def test_create_photo(client, token):
             "tags": ["test_post"],
         }
         file = create_file()
-        print(type(create_file))
 
         response = client.post(
             "/api/photos/create/",
@@ -54,7 +52,7 @@ def test_create_photo(client, token):
         )
         assert response.status_code == 201, response.text
         data = response.json()
-        assert data["title"] == "test_photo"
-        assert data["description"] == "lorem ipsum"
+        assert data["title"] == "test_post"
+        assert data["description"] == "test_post"
         assert isinstance(data["description"], str)
         assert "id" in data
