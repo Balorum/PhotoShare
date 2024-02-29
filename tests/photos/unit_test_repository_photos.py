@@ -26,7 +26,8 @@ def create_file():
     image = Image.new("RGB", size=(100, 100), color=(255, 0, 0))
     image.save(file_data, "jpeg")
     file_data.seek(0)
-    return file_data
+    file = UploadFile(file_data)
+    return file
 
 
 class TestContact(unittest.IsolatedAsyncioTestCase):
