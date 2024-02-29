@@ -125,13 +125,12 @@ async def update_avatar_user(
 async def get_all_users(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     """
     The get_all_users function returns a list of users.
-        ---
-        get:
-          summary: Returns all users.
-          description: This can only be done by the logged in user.
-          operationId: read_all_users
-          parameters:
-            - name: skip (optional)  # The number of records to skip before returning results, default is 0 (no records skipped).  Used for pagination purposes.   See https://docs.mongodb.com/manual/reference/method/cursor.skip/#cursor-skip-examples for more information on how this
+
+        summary: Returns all users.
+        description: This can only be done by the logged in user.
+        operationId: read_all_users
+        parameters:
+        skip: (optional)  # The number of records to skip before returning results, default is 0 (no records skipped).
 
     :param skip: int: Skip the first n records
     :param limit: int: Limit the number of results returned

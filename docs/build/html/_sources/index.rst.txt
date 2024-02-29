@@ -59,6 +59,13 @@ REST API repository Comments
   :show-inheritance:
 
 
+REST API repository Ratings
+======================================
+.. automodule:: src.repository.ratings
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
 
 REST API routes Auth
 =========================
@@ -107,6 +114,13 @@ REST API routes Comments
   :undoc-members:
   :show-inheritance:
 
+
+REST API routes Ratings
+=========================
+.. automodule:: src.routes.ratings
+  :members:
+  :undoc-members:
+  :show-inheritance:
 
 
 REST API services Auth

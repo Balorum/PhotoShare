@@ -40,7 +40,7 @@ async def create_comment(
 ):
     """
     The create_comment function creates a new comment for the image with the given ID.
-        The user who created this comment is determined by the JWT token in the request header.
+    The user who created this comment is determined by the JWT token in the request header.
 
     :param photo_id: int: Get the photo that the comment is being made on
     :param comment: CommentModel: Create a new comment
