@@ -25,9 +25,9 @@ class Settings(BaseSettings):
     redis_host: str = "localhost"
     redis_port: int = 6379
     redis_password: str = "secretPassword"
-    cloudinary_name: str = "name"
-    cloudinary_api_key: str = "1234567890"
-    cloudinary_api_secret: str = "secret"
+    cloudinary_name: str = "dmbcwijhm"
+    cloudinary_api_key: int = 923533367683279
+    cloudinary_api_secret: str = "Nhy698enrsQgiEnzFwuJl_mIddc"
 
     class Config:
         extra = "ignore"
