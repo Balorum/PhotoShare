@@ -12,7 +12,7 @@ def cloud_init():
 
 
 class Settings(BaseSettings):
-    sqlalchemy_database_url: str = "postgresql+psycopg2://user:password@localhost:5432/postgres"
+    sqlalchemy_database_url: str = "postgresql+psycopg2://postgres:mysecretpassword@localhost:5432/fast_db"
     secret_key: str = "secretkey"
     algorithm: str = "HS256"
     mail_username: str = "example@meta.ua"
@@ -23,9 +23,9 @@ class Settings(BaseSettings):
     redis_host: str = "localhost"
     redis_port: int = 6379
     redis_password: str = "secretPassword"
-    cloudinary_name: str = "name"
-    cloudinary_api_key: str = "1234567890"
-    cloudinary_api_secret: str = "secret"
+    cloudinary_name: str = "dmbcwijhm"
+    cloudinary_api_key: int = 923533367683279
+    cloudinary_api_secret: str = "Nhy698enrsQgiEnzFwuJl_mIddc"
 
     class Config:
         extra = 'ignore'
