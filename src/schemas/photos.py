@@ -24,14 +24,14 @@ class TagResponse(TagBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class RatingBase(BaseModel):
     rate: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class PhotoResponse(PhotoBase):

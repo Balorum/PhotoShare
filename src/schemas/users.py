@@ -30,7 +30,8 @@ class UserResponse(BaseModel):
 class UserUpdateAvatar(BaseModel):
     username: str
     avatar: str
-    detail: str = "Avatar successfully changed!"    
+    detail: str = "Avatar successfully changed!"
+
 
 class UserUpdateModel(BaseModel):
     id: int = 1
