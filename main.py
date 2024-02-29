@@ -27,7 +27,7 @@ async def startup():
 
 @app.get("/")
 def read_root():
-    return {"message": "Hello world!"}
+    return {"message": "Hello World!"}
 
 
 app.include_router(auth.router, prefix="/api")
