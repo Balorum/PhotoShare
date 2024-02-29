@@ -58,7 +58,7 @@ async def login(body: OAuth2PasswordRequestForm = Depends(), db: Session = Depen
 
 @router.post("/logout")
 async def logout(
-    token: str = Depends(auth_service.get_token_user),
+    credentials: HTTPAuthorizationCredentials = Security(security),
     current_user: UserModel = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -72,6 +72,7 @@ async def logout(
     :param db: Session: Pass the database session to the function
     :return: A dictionary with the status code, detail and token
     """
+    token = credentials.credentials
     await repository_users.save_black_list_token(token, current_user, db)
 
     return {

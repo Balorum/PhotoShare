@@ -229,3 +229,5 @@ async def save_black_list_token(token: str, user: User, db):
     db.add(blacklist_token)
     db.commit()
     db.refresh(blacklist_token)
+
+
